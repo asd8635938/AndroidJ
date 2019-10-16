@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#19b0c1</color>
+
+    <color name="textUnSelect">#889aad</color>
+    <color name="textSelect">#19b0c1</color>
+    <!--<color name="textSelect">#3cebc1</color>-->
+    <color name="text19b0c1">#6de2ef</color>
+    <color name="tab_backgroud"> #42E392</color>
+    <color name="green">#5ff163</color>
+    <color name="green1">#18a31b</color>
+    <color name="zise">#7f16bc</color>
+    <color name="ditie">#bc16a3</color>
+    <color name="canyi">#bc7a16</color>
+    <color name="shangye">#d1ba10</color>
+    <color name="bg_common">#E7EAEF</color>
+    <color name="tabf4f6f7">#F4F6F7</color>
+    <color name="bg_search">#c7cacf</color>
+    <color name="textD2d2d2">#d2d2d2</color>
+    <color name="white">#FFFFFF</color>
+    <color name="tabf1f1f1">#F1F1F1</color>
+    <color name="huangse">#e78c20</color>
+    <color name="red">#f11c15</color>
+    <color name="tab7b818b">#7B818B</color>
+    <color name="tab7c8392">#7c8392</color>
+    <color name="orange">#ecb433</color>
+    <color name="text889aad">#889aad</color>
+    <color name="seach_background">#ccd9e7</color>
+    <color name="text414042">#414042</color>
+    <color name="text565656">#565656</color>
+    <color name="bgBackgroud">#e0e3ea</color>
+    <color name="transparent">#00000000</color>
+    <color name="text8b9aad">#8b9aad</color>
+    <color name="text2a2e42">#2a2e42</color>
+    <color name="backEef3f6">#eef3f6</color>
+    <color name="blue_text">#367be8</color>
+    <color name="red_text">#ff5861</color>
+    <color name="tab_red">#c17074</color>
+    <color name="text494949">#494949</color>
+    <color name="black">#b0000000</color>
+    <color name="tans">#00000000</color>
+    <color name="tab_blue">#2FA3E0</color>
+    <color name="tab_un_blue">#727C8E</color>
+    <color name="popup_main_background">#b0000000</color>
+
+    <!--20%透明度黑-->
+    <color name="color_10">#19000000</color>
+    <!--20%透明度黑-->
+    <color name="color_20">#33000000</color>
+    <!--40%透明度黑-->
+    <color name="color_40">#66000000</color>
+    <!--50%透明度黑-->
+    <color name="color_50">#7F000000</color>
+    <!--60%透明度黑-->
+    <color name="color_60">#99000000</color>
+    <!--80%透明度黑-->
+    <color name="color_80">#CC000000</color>
+</resources>
