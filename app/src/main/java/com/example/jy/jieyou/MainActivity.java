@@ -16,6 +16,8 @@ import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
 import com.next.easynavigation.view.EasyNavigationBar;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,9 +72,11 @@ public class MainActivity extends BaseActivity {
     private void initPermiss() {
         XXPermissions.with(this)
                 .permission(Permission.ACCESS_FINE_LOCATION,
-                        Permission.ACCESS_COARSE_LOCATION, Permission.CALL_PHONE,
+                        Permission.ACCESS_COARSE_LOCATION,
                         Permission.READ_EXTERNAL_STORAGE,
-                        Permission.WRITE_EXTERNAL_STORAGE)
+                        Permission.WRITE_EXTERNAL_STORAGE,
+                        Permission.READ_CONTACTS
+                )
                 .request(new OnPermission() {
                     @Override
                     public void hasPermission(List<String> granted, boolean isAll) {
@@ -87,6 +91,7 @@ public class MainActivity extends BaseActivity {
 
     // 用来计算返回键的点击间隔时间
     private long exitTime = 0;
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {

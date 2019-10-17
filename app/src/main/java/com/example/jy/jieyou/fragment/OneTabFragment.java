@@ -11,8 +11,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.jy.jieyou.R;
+import com.example.jy.jieyou.activity.PhonePeopleActivity;
 import com.example.jy.jieyou.base.BaseFragment;
+import com.example.jy.jieyou.bean.MessageEvent;
 import com.example.jy.jieyou.manager.Image;
+import com.example.jy.jieyou.phone.SortModel;
 import com.gyf.immersionbar.ImmersionBar;
 import com.gyf.immersionbar.components.SimpleImmersionOwner;
 import com.youth.banner.Banner;
@@ -20,6 +23,11 @@ import com.youth.banner.BannerConfig;
 import com.youth.banner.Transformer;
 import com.youth.banner.listener.OnBannerListener;
 import com.youth.banner.loader.ImageLoader;
+
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
@@ -39,20 +47,34 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
 
     @BindView(R.id.banner)
     Banner banner;
+    @BindView(R.id.imageViewAdd)
+    ImageView imageViewAdd;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View mView = inflater.inflate(R.layout.one_tab_fragment, null);
         ButterKnife.bind(this, mView);
+        EventBus.getDefault().register(this);
         titleCenterName.setText("短信群发");
         titleLeft.setVisibility(View.GONE);
         initView();
         return mView;
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent() {
+
+    }
+
     private void initView() {
         initViewPager(new ArrayList<String>());
+        imageViewAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PhonePeopleActivity.getInstance(getActivity());
+            }
+        });
     }
 
     private void initViewPager(ArrayList<String> bannerList) {
@@ -99,6 +121,14 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
                 .navigationBarColor(R.color.white)
                 .statusBarDarkFont(true)
                 .init();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
     }
 
     @Override
