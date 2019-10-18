@@ -4,18 +4,28 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.jy.jieyou.R;
 import com.example.jy.jieyou.activity.PhonePeopleActivity;
 import com.example.jy.jieyou.base.BaseFragment;
 import com.example.jy.jieyou.bean.MessageEvent;
 import com.example.jy.jieyou.manager.Image;
+import com.example.jy.jieyou.manager.NetManager;
+import com.example.jy.jieyou.manager.URL;
+import com.example.jy.jieyou.manager.onNetCallbackListener;
 import com.example.jy.jieyou.phone.SortModel;
+import com.example.jy.jieyou.request.Request;
+import com.example.jy.jieyou.view.EditTextWithScrollView;
 import com.gyf.immersionbar.ImmersionBar;
 import com.gyf.immersionbar.components.SimpleImmersionOwner;
 import com.youth.banner.Banner;
@@ -30,6 +40,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,6 +60,20 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
     Banner banner;
     @BindView(R.id.imageViewAdd)
     ImageView imageViewAdd;
+    @BindView(R.id.editextFilePeople)
+    EditText editextFilePeople;
+    @BindView(R.id.textViewPost)
+    TextView textViewPost;
+    @BindView(R.id.mCheckBox)
+    CheckBox mCheckBox;
+    @BindView(R.id.editTextFileContent)
+    EditTextWithScrollView editTextFileContent;
+    @BindView(R.id.textViewFilePeopleAll)
+    TextView textViewFilePeopleAll;
+    @BindView(R.id.textViewYiXuan)
+    TextView textViewYiXuan;
+    @BindView(R.id.textViewShengYu)
+    TextView textViewShengYu;
 
     @Nullable
     @Override
@@ -59,12 +84,75 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
         titleCenterName.setText("短信群发");
         titleLeft.setVisibility(View.GONE);
         initView();
+        initClick();
         return mView;
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent() {
+    private void initClick() {
+        editTextFileContent.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
 
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+                textViewYiXuan.setText(count + start + "");
+                textViewShengYu.setText(70 - start - count + "");
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
+
+        textViewPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (editextFilePeople.getText().toString().trim().isEmpty()) {
+                    Toast.makeText(getActivity(), "请选择收件人", Toast.LENGTH_SHORT).show();
+                } else if (editTextFileContent.getText().toString().trim().isEmpty()) {
+                    Toast.makeText(getActivity(), "请输入发送内容", Toast.LENGTH_SHORT).show();
+                }
+
+                Request request = new Request();
+                request.setMobile("18701134427,18101134427");
+                request.setContent("测试发送");
+
+                NetManager.http_post(URL.actionSend, "", request, new onNetCallbackListener() {
+                    @Override
+                    public void onSuccess(String requestStr, String result) {
+                        super.onSuccess(requestStr, result);
+                        System.out.println("result = " + result);
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        super.onError(throwable);
+                        System.out.println("throwable = " + throwable);
+                    }
+                });
+            }
+        });
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(MessageEvent mResult) {
+        List<SortModel> mSortModels = mResult.getmResult();
+        String mString = "";
+        int mInt = 0;
+        for (int i = 0; i < mSortModels.size(); i++) {
+            if (mSortModels.get(i).isClick()) {
+                mInt++;
+                mString = mString + mSortModels.get(i).getTelPhone() + ",";
+            }
+        }
+        if (mString.isEmpty()) {
+            editextFilePeople.setText("");
+            textViewFilePeopleAll.setText("已选0位");
+        } else {
+            editextFilePeople.setText(mString.trim().substring(0, mString.length() - 1));
+            textViewFilePeopleAll.setText("已选" + mInt + "位");
+        }
     }
 
     private void initView() {
@@ -130,6 +218,7 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
             EventBus.getDefault().unregister(this);
         }
     }
+
 
     @Override
     public boolean immersionBarEnabled() {

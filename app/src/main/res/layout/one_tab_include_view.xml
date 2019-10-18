@@ -90,11 +90,12 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/textViewFilePeopleAll"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="12dp"
                 android:layout_marginTop="10dp"
-                android:text="已选1位"
+                android:text="已选0位"
                 android:textColor="@color/tab_backgroud"
                 android:textSize="@dimen/sp13" />
         </LinearLayout>
@@ -166,7 +167,7 @@
                 android:background="@drawable/shape_seach"
                 android:gravity="left"
                 android:hint="请输入您发送的内容"
-                android:maxLines="70"
+                android:maxLength="70"
                 android:paddingBottom="5dp"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
@@ -232,9 +233,10 @@
                     android:textSize="@dimen/sp_12" />
 
                 <TextView
+                    android:id="@+id/textViewYiXuan"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="63"
+                    android:text="0"
                     android:textColor="@color/tab_red"
                     android:textSize="@dimen/sp_12" />
 
@@ -246,9 +248,10 @@
                     android:textSize="@dimen/sp_12" />
 
                 <TextView
+                    android:id="@+id/textViewShengYu"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="7"
+                    android:text="70"
                     android:textColor="@color/tab_red"
                     android:textSize="@dimen/sp_12" />
 
@@ -300,6 +303,7 @@
                     android:textSize="@dimen/sp14" />
 
                 <TextView
+                    android:id="@+id/textViewPost"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/shape_cicle"
