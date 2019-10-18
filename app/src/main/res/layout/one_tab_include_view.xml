@@ -287,20 +287,30 @@
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
-                <CheckBox
-                    android:id="@+id/mCheckBox"
-                    style="@style/CustomCheckboxTheme"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-                <TextView
+                <LinearLayout
+                    android:id="@+id/linearTime"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
                     android:layout_weight="1"
-                    android:text="定时发送"
-                    android:textColor="@color/tab7b818b"
-                    android:textSize="@dimen/sp14" />
+                    android:gravity="center_vertical"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/mCheckBox"
+                        style="@style/CustomCheckboxTheme"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="false" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:text="定时发送"
+                        android:textColor="@color/tab7b818b"
+                        android:textSize="@dimen/sp14" />
+
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/textViewPost"

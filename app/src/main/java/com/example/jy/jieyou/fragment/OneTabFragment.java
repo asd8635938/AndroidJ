@@ -12,9 +12,13 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bigkoo.pickerview.builder.TimePickerBuilder;
+import com.bigkoo.pickerview.listener.OnTimeSelectListener;
+import com.bigkoo.pickerview.view.TimePickerView;
 import com.example.jy.jieyou.R;
 import com.example.jy.jieyou.activity.PhonePeopleActivity;
 import com.example.jy.jieyou.base.BaseFragment;
@@ -25,6 +29,7 @@ import com.example.jy.jieyou.manager.URL;
 import com.example.jy.jieyou.manager.onNetCallbackListener;
 import com.example.jy.jieyou.phone.SortModel;
 import com.example.jy.jieyou.request.Request;
+import com.example.jy.jieyou.utils.DateUtils;
 import com.example.jy.jieyou.view.EditTextWithScrollView;
 import com.gyf.immersionbar.ImmersionBar;
 import com.gyf.immersionbar.components.SimpleImmersionOwner;
@@ -40,6 +45,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -74,6 +81,10 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
     TextView textViewYiXuan;
     @BindView(R.id.textViewShengYu)
     TextView textViewShengYu;
+    @BindView(R.id.linearTime)
+    LinearLayout linearTime;
+
+    private String mTime; // 定时时间
 
     @Nullable
     @Override
@@ -102,6 +113,31 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
 
             @Override
             public void afterTextChanged(Editable editable) {
+            }
+        });
+
+        final Calendar startDate = Calendar.getInstance();
+        final Calendar endDate = Calendar.getInstance();
+        startDate.set(startDate.get(Calendar.YEAR),startDate.get(Calendar.MONTH),startDate.get(Calendar.DAY_OF_MONTH),startDate.get(Calendar.HOUR_OF_DAY),startDate.get(Calendar.MINUTE),startDate.get(Calendar.SECOND));
+        endDate.set(2030,1,1);
+
+        linearTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TimePickerView pvTime = new TimePickerBuilder(getActivity(), new OnTimeSelectListener() {
+                    @Override
+                    public void onTimeSelect(Date date, View v) {
+                        mTime = DateUtils.getDateStr(date,"");
+                        mCheckBox.setChecked(true);
+                    }
+                }).addOnCancelClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mTime = "";
+                        mCheckBox.setChecked(false);
+                    }
+                }).setType(new boolean[]{true, true, true, true, true, true}).setLabel("年","月","日","时","分","秒").setRangDate(startDate,endDate).build();
+                pvTime.show();
             }
         });
 
