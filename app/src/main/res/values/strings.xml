@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">短信助手</string>
+    <string name="edittext_content">【影程科技】尊敬的用户，您的验证码为：019527，感谢您的支持！</string>
 </resources>

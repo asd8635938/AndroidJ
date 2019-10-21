@@ -47,6 +47,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -84,7 +85,7 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
     @BindView(R.id.linearTime)
     LinearLayout linearTime;
 
-    private String mTime; // 定时时间
+    private String mTime = ""; // 定时时间
 
     @Nullable
     @Override
@@ -118,8 +119,8 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
 
         final Calendar startDate = Calendar.getInstance();
         final Calendar endDate = Calendar.getInstance();
-        startDate.set(startDate.get(Calendar.YEAR),startDate.get(Calendar.MONTH),startDate.get(Calendar.DAY_OF_MONTH),startDate.get(Calendar.HOUR_OF_DAY),startDate.get(Calendar.MINUTE),startDate.get(Calendar.SECOND));
-        endDate.set(2030,1,1);
+        startDate.set(startDate.get(Calendar.YEAR), startDate.get(Calendar.MONTH), startDate.get(Calendar.DAY_OF_MONTH), startDate.get(Calendar.HOUR_OF_DAY), startDate.get(Calendar.MINUTE), startDate.get(Calendar.SECOND));
+        endDate.set(2100, 1, 1);
 
         linearTime.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,7 +128,7 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
                 TimePickerView pvTime = new TimePickerBuilder(getActivity(), new OnTimeSelectListener() {
                     @Override
                     public void onTimeSelect(Date date, View v) {
-                        mTime = DateUtils.getDateStr(date,"");
+                        mTime = DateUtils.getDateStr(date, "");
                         mCheckBox.setChecked(true);
                     }
                 }).addOnCancelClickListener(new View.OnClickListener() {
@@ -136,7 +137,7 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
                         mTime = "";
                         mCheckBox.setChecked(false);
                     }
-                }).setType(new boolean[]{true, true, true, true, true, true}).setLabel("年","月","日","时","分","秒").setRangDate(startDate,endDate).build();
+                }).setType(new boolean[]{true, true, true, true, true, true}).setLabel("年", "月", "日", "时", "分", "秒").setRangDate(startDate, endDate).build();
                 pvTime.show();
             }
         });
@@ -144,20 +145,29 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
         textViewPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (editextFilePeople.getText().toString().trim().isEmpty()) {
+                if (editextFilePeople.getText().toString().isEmpty()) {
                     Toast.makeText(getActivity(), "请选择收件人", Toast.LENGTH_SHORT).show();
-                } else if (editTextFileContent.getText().toString().trim().isEmpty()) {
+                    return;
+                } else if (editTextFileContent.getText().toString().isEmpty()) {
                     Toast.makeText(getActivity(), "请输入发送内容", Toast.LENGTH_SHORT).show();
+                    return;
                 }
 
+                HashMap<String, Object> mHashMap = new HashMap<>();
                 Request request = new Request();
-                request.setMobile("18701134427,18101134427");
-                request.setContent("测试发送");
+                mHashMap.put("action","send");
+                mHashMap.put("mobile",editextFilePeople.getText().toString());
+                mHashMap.put("userid","51");
+                mHashMap.put("timestamp",request.getTimestamp());
+                mHashMap.put("sendTime",mTime);
+                mHashMap.put("content",editTextFileContent.getText().toString());
+                mHashMap.put("sign",request.getSign());
 
-                NetManager.http_post(URL.actionSend, "", request, new onNetCallbackListener() {
+                NetManager.http_post_map(URL.actionSend, mHashMap, "", "", new onNetCallbackListener() {
                     @Override
                     public void onSuccess(String requestStr, String result) {
                         super.onSuccess(requestStr, result);
+                        Toast.makeText(getActivity(),"发送成功",Toast.LENGTH_SHORT).show();
                         System.out.println("result = " + result);
                     }
 
