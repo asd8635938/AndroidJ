@@ -11,7 +11,6 @@ import java.util.Date;
 
 public class Request {
 
-//    private String action ="send";
     private String userName = "dxqf";
     private String passWord = "dxqf2005";
     private String timestamp = getTime14();  // 时间戳
@@ -22,13 +21,6 @@ public class Request {
     private String sendTime; // 定时发送时间  为空表示立即发送，定时发送格式2010-10-24 09:08:10
     private String extno; // 请先询问配置的通道是否支持扩展子号，如果不支持，请填空。子号只能为数字，且最多10位数。
 
-//    public String getAction() {
-//        return action == null ? "" : action;
-//    }
-//
-//    public void setAction(String action) {
-//        this.action = action == null ? "" : action;
-//    }
 
     public String getUserName() {
         return userName == null ? "" : userName;
