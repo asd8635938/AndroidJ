@@ -101,9 +101,14 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
     }
 
     private void initClick() {
+        if (!editTextFileContent.getText().toString().isEmpty()) {
+            textViewYiXuan.setText(editTextFileContent.length() + "");
+            textViewShengYu.setText(70 - editTextFileContent.length() + "");
+        }
+
         editTextFileContent.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void beforeTextChanged(CharSequence charSequence, int start, int before, int count) {
             }
 
             @Override
@@ -212,7 +217,6 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
     }
 
     private void initViewPager(ArrayList<String> bannerList) {
-        bannerList.clear();
         //设置图片加载器
         banner.setImageLoader(new GlideImageLoader());
         bannerList.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1571216113084&di=18bc1d5bc366d02fcc85f1aac33426be&imgtype=0&src=http%3A%2F%2Fn4.cmsfile.pg0.cn%2Fgroup1%2FM00%2F06%2FD3%2FCgqg2FWkYlaABioBACROPiWwOKM327.jpg");
