@@ -4,11 +4,14 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.NestedScrollView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -30,6 +33,7 @@ import com.example.jy.jieyou.manager.onNetCallbackListener;
 import com.example.jy.jieyou.phone.SortModel;
 import com.example.jy.jieyou.request.Request;
 import com.example.jy.jieyou.utils.DateUtils;
+import com.example.jy.jieyou.utils.SoftKeyboardUtils;
 import com.example.jy.jieyou.view.EditTextWithScrollView;
 import com.gyf.immersionbar.ImmersionBar;
 import com.gyf.immersionbar.components.SimpleImmersionOwner;
@@ -84,8 +88,12 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
     TextView textViewShengYu;
     @BindView(R.id.linearTime)
     LinearLayout linearTime;
+    @BindView(R.id.scrollView)
+    NestedScrollView mScrollView;
 
     private String mTime = ""; // 定时时间
+    private int mStringLength = 0; // 收件人联系电话长度
+    private List<SortModel> mSortModels = new ArrayList<>();
 
     @Nullable
     @Override
@@ -105,6 +113,38 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
             textViewYiXuan.setText(editTextFileContent.length() + "");
             textViewShengYu.setText(70 - editTextFileContent.length() + "");
         }
+
+        editTextFileContent.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                initScoll();
+            }
+        });
+
+        editextFilePeople.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (editable.toString().length() > 0) {
+                    if (editable.toString().contains(",")) {
+                        String[] split = editable.toString().split(",");
+                        mStringLength = split.length;
+                        textViewFilePeopleAll.setText("已选" + split.length + "位");
+                    } else {
+                        textViewFilePeopleAll.setText("已选1位");
+                    }
+                } else {
+                    textViewFilePeopleAll.setText("已选0位");
+                }
+            }
+        });
 
         editTextFileContent.addTextChangedListener(new TextWatcher() {
             @Override
@@ -160,19 +200,19 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
 
                 HashMap<String, Object> mHashMap = new HashMap<>();
                 Request request = new Request();
-                mHashMap.put("action","send");
-                mHashMap.put("mobile",editextFilePeople.getText().toString());
-                mHashMap.put("userid","51");
-                mHashMap.put("timestamp",request.getTimestamp());
-                mHashMap.put("sendTime",mTime);
-                mHashMap.put("content",editTextFileContent.getText().toString());
-                mHashMap.put("sign",request.getSign());
+                mHashMap.put("action", "send");
+                mHashMap.put("mobile", editextFilePeople.getText().toString());
+                mHashMap.put("userid", "51");
+                mHashMap.put("timestamp", request.getTimestamp());
+                mHashMap.put("sendTime", mTime);
+                mHashMap.put("content", editTextFileContent.getText().toString());
+                mHashMap.put("sign", request.getSign());
 
                 NetManager.http_post_map(URL.actionSend, mHashMap, "", "", new onNetCallbackListener() {
                     @Override
                     public void onSuccess(String requestStr, String result) {
                         super.onSuccess(requestStr, result);
-                        Toast.makeText(getActivity(),"发送成功",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "发送成功", Toast.LENGTH_SHORT).show();
                         System.out.println("result = " + result);
                     }
 
@@ -184,25 +224,58 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
                 });
             }
         });
+
+        mScrollView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                SoftKeyboardUtils.hideSoftKeyboard(getActivity());
+                return false;
+            }
+        });
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(MessageEvent mResult) {
-        List<SortModel> mSortModels = mResult.getmResult();
+        mSortModels = mResult.getmResult();
         String mString = "";
-        int mInt = 0;
         for (int i = 0; i < mSortModels.size(); i++) {
             if (mSortModels.get(i).isClick()) {
-                mInt++;
                 mString = mString + mSortModels.get(i).getTelPhone() + ",";
             }
         }
+
         if (mString.isEmpty()) {
-            editextFilePeople.setText("");
-            textViewFilePeopleAll.setText("已选0位");
+            if (editextFilePeople.getText().toString().isEmpty()) {
+                editextFilePeople.setText("");
+                textViewFilePeopleAll.setText("已选0位");
+            } else {
+                String mReplace = "";
+                for (int i = 0; i < PhonePeopleActivity.mSortModel.size(); i++) {
+                    if (editextFilePeople.getText().toString().contains(PhonePeopleActivity.mSortModel.get(i).getTelPhone() + ",")) {
+                        mReplace = editextFilePeople.getText().toString().replace(PhonePeopleActivity.mSortModel.get(i).getTelPhone() + ",", "");
+                        editextFilePeople.setText(mReplace);
+                    } else if (editextFilePeople.getText().toString().contains(PhonePeopleActivity.mSortModel.get(i).getTelPhone())) {
+                        mReplace = editextFilePeople.getText().toString().replace(PhonePeopleActivity.mSortModel.get(i).getTelPhone(), "");
+                        editextFilePeople.setText(mReplace);
+                    }
+                }
+                if (!mReplace.isEmpty() && mReplace.endsWith(",")) {
+                    editextFilePeople.setText(mReplace.substring(0, mReplace.length() - 1));
+                } else {
+                    editextFilePeople.setText(mReplace);
+                }
+            }
         } else {
-            editextFilePeople.setText(mString.trim().substring(0, mString.length() - 1));
-            textViewFilePeopleAll.setText("已选" + mInt + "位");
+            if (editextFilePeople.getText().toString().isEmpty()) {
+                editextFilePeople.setText(mString.trim().substring(0, mString.length() - 1));
+            } else {
+                if (editextFilePeople.getText().toString().endsWith(",")) {
+                    editextFilePeople.setText(editextFilePeople.getText().toString() + mString.trim().substring(0, mString.length() - 1));
+                } else {
+                    editextFilePeople.setText(editextFilePeople.getText().toString() + "," + mString.trim().substring(0, mString.length() - 1));
+                }
+            }
+            textViewFilePeopleAll.setText("已选" + mStringLength + "位");
         }
     }
 
@@ -211,7 +284,7 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
         imageViewAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PhonePeopleActivity.getInstance(getActivity());
+                PhonePeopleActivity.getInstance(getActivity(), mSortModels);
             }
         });
     }
@@ -240,6 +313,7 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
         banner.setOnBannerListener(new OnBannerListener() {
             @Override
             public void OnBannerClick(int position) {
+                SoftKeyboardUtils.hideSoftKeyboard(getActivity());
             }
         });
         //banner设置方法全部调用完毕时最后调用
@@ -267,6 +341,10 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
+    }
+
+    private void initScoll() {
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
     }
 
 

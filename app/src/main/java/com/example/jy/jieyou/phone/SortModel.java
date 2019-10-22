@@ -1,6 +1,8 @@
 package com.example.jy.jieyou.phone;
 
-public class SortModel {
+import java.io.Serializable;
+
+public class SortModel implements Serializable{
 
     private String name; //联系人姓名
     private String sortLetters; // 显示数据拼音的首字母

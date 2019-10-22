@@ -27,10 +27,12 @@ import com.example.jy.jieyou.phone.PinyinComparator;
 import com.example.jy.jieyou.phone.SideBar;
 import com.example.jy.jieyou.phone.SortModel;
 import com.example.jy.jieyou.utils.PhoneUtil;
+import com.example.jy.jieyou.utils.SoftKeyboardUtils;
 import com.gyf.immersionbar.ImmersionBar;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -76,14 +78,19 @@ public class PhonePeopleActivity extends BaseActivity {
      */
     private CharacterParser characterParser;
     private List<SortModel> SourceDateList;
+    // 传递过来的保存的数据
+    public static List<SortModel> mSortModel = new ArrayList<>();
 
     /**
      * 根据拼音来排列ListView里面的数据类
      */
     private PinyinComparator pinyinComparator;
 
-    public static void getInstance(Context context) {
+    public static void getInstance(Context context, List<SortModel> mResult) {
         Intent intent = new Intent(context, PhonePeopleActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(mDATA, (Serializable) mResult);
+        intent.putExtras(bundle);
         context.startActivity(intent);
     }
 
@@ -95,11 +102,14 @@ public class PhonePeopleActivity extends BaseActivity {
         ImmersionBar.with(this).navigationBarColor(R.color.white).statusBarDarkFont(true).init();
         titleCenterName.setText("通讯录");
 
+        mSortModel = (List<SortModel>) getIntent().getExtras().getSerializable(mDATA);
+
         initView();
 
         titleLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                SoftKeyboardUtils.hideSoftKeyboard(PhonePeopleActivity.this);
                 finish();
             }
         });
@@ -110,18 +120,18 @@ public class PhonePeopleActivity extends BaseActivity {
             PhoneUtil phoneUtil = new PhoneUtil(this);
             List<SortModel> mPhoneDtos = phoneUtil.getPhone();
 
-//            SortModel sortModel = new SortModel();
-//            sortModel.setTelPhone("1870000");
-//            sortModel.setName("小王");
-//            SortModel sortModel1 = new SortModel();
-//            sortModel1.setTelPhone("1870111");
-//            sortModel1.setName("小王11111");
-//            SortModel sortModel2 = new SortModel();
-//            sortModel2.setTelPhone("181");
-//            sortModel2.setName("小成11111");
-//            mPhoneDtos.add(sortModel);
-//            mPhoneDtos.add(sortModel1);
-//            mPhoneDtos.add(sortModel2);
+            SortModel sortModel = new SortModel();
+            sortModel.setTelPhone("1870000");
+            sortModel.setName("小王");
+            SortModel sortModel1 = new SortModel();
+            sortModel1.setTelPhone("1870111");
+            sortModel1.setName("小王11111");
+            SortModel sortModel2 = new SortModel();
+            sortModel2.setTelPhone("181");
+            sortModel2.setName("小成11111");
+            mPhoneDtos.add(sortModel);
+            mPhoneDtos.add(sortModel1);
+            mPhoneDtos.add(sortModel2);
 
             // 实例化汉字转拼音类
             characterParser = CharacterParser.getInstance();
@@ -300,6 +310,7 @@ public class PhonePeopleActivity extends BaseActivity {
             viewHolder.tvTitle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    SoftKeyboardUtils.hideSoftKeyboard(PhonePeopleActivity.this);
                     if (mContent.isClick()) {
                         finalViewHolder.tvTitle.setBackgroundResource(R.color.white);
                         mContent.setClick(false);
@@ -359,7 +370,6 @@ public class PhonePeopleActivity extends BaseActivity {
 
     /**
      * 为ListView填充数据
-     *
      * @param date
      * @return
      */
@@ -370,6 +380,18 @@ public class PhonePeopleActivity extends BaseActivity {
             sortModel.setName(date.get(i).getName());
             sortModel.setNumb(i);
             sortModel.setTelPhone(date.get(i).getTelPhone());
+
+            if (mSortModel.size() > 0) {
+                for (int j = 0; j < mSortModel.size(); j++) {
+                    if (date.get(i).getTelPhone().equals(mSortModel.get(j).getTelPhone())) {
+                        if (mSortModel.get(j).isClick()) {
+                            sortModel.setClick(true);
+                            break;
+                        }
+                    }
+                }
+            }
+
             // 汉字转换成拼音
             String pinyin = characterParser.getSelling(date.get(i).getName());
             String sortString = pinyin.substring(0, 1).toUpperCase();

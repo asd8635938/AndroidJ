@@ -59,7 +59,7 @@ public class MainActivity extends BaseActivity {
                 .normalIconItems(normalIcon)
                 .selectIconItems(selectIcon)
                 .fragmentList(fragments)
-                .canScroll(false)    //Viewpager能否左右滑动
+                .canScroll(true)    //Viewpager能否左右滑动
                 .navigationBackground(getResources().getColor(R.color.white))
                 .normalTextColor(getResources().getColor(R.color.tab_un_blue))
                 .selectTextColor(getResources().getColor(R.color.tab_blue))
