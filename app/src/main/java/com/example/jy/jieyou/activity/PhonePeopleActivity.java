@@ -413,7 +413,7 @@ public class PhonePeopleActivity extends BaseActivity {
      * @param filterStr
      */
     private void filterData(String filterStr) {
-        List<SortModel> filterDateList = new ArrayList<SortModel>();
+        List<SortModel> filterDateList = new ArrayList<>();
 
         if (TextUtils.isEmpty(filterStr)) {
             filterDateList = SourceDateList;
