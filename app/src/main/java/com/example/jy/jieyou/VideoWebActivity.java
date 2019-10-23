@@ -19,6 +19,8 @@ import com.example.jy.jieyou.view.X5WebView;
 
 public class VideoWebActivity extends BaseActivity {
 
+    public static String mUrlString = "";
+
     public static void getInstance(Context context) {
         Intent intent = new Intent(context, VideoWebActivity.class);
         context.startActivity(intent);
@@ -35,7 +37,8 @@ public class VideoWebActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.video_web_activity);
         webView =  findViewById(R.id.web_filechooser);
-        webView.loadUrl("http://47.110.157.24:2350/mobile/tutorial/knowledgesDetail?id=190920103558988472");
+//        webView.loadUrl("http://47.110.157.24:2350/mobile/tutorial/knowledgesDetail?id=190920103558988472");
+        webView.loadUrl(mUrlString);
 
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
 
@@ -106,7 +109,7 @@ public class VideoWebActivity extends BaseActivity {
             Toast.makeText(this, "恢复webkit初始状态", Toast.LENGTH_LONG).show();
             Bundle data = new Bundle();
 
-            data.putBoolean("standardFullScreen", true);// true表示标准全屏，会调起onShowCustomView()，false表示X5全屏；不设置默认false，
+            data.putBoolean("standardFullScreen", false);// true表示标准全屏，会调起onShowCustomView()，false表示X5全屏；不设置默认false，
 
             data.putBoolean("supportLiteWnd", false);// false：关闭小窗；true：开启小窗；不设置默认true，
 

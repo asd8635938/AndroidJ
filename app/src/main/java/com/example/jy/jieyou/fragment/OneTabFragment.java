@@ -122,16 +122,18 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
     }
 
     private void initClick() {
+
         imageViewFile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                VideoWebActivity.getInstance(getActivity());
-//                FilePicker.from(OneTabFragment.this)
-//                        .chooseForMimeType()
-//                        .setMaxCount(1)
-//                        .setFileTypes("vcf", "txt")
-//                        .requestCode(REQUEST_CODE_CHOOSE)
-//                        .start();
+//                VideoWebActivity.mUrlString = editextFilePeople.getText().toString();
+//                VideoWebActivity.getInstance(getActivity());
+                FilePicker.from(OneTabFragment.this)
+                        .chooseForMimeType()
+                        .setMaxCount(1)
+                        .setFileTypes("vcf", "txt")
+                        .requestCode(REQUEST_CODE_CHOOSE)
+                        .start();
             }
         });
 
