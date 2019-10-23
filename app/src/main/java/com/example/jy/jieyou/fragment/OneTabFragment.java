@@ -1,6 +1,8 @@
 package com.example.jy.jieyou.fragment;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,7 +24,11 @@ import android.widget.Toast;
 import com.bigkoo.pickerview.builder.TimePickerBuilder;
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
+import com.ess.filepicker.FilePicker;
+import com.ess.filepicker.model.EssFile;
+import com.ess.filepicker.util.Const;
 import com.example.jy.jieyou.R;
+import com.example.jy.jieyou.VideoWebActivity;
 import com.example.jy.jieyou.activity.PhonePeopleActivity;
 import com.example.jy.jieyou.base.BaseFragment;
 import com.example.jy.jieyou.bean.MessageEvent;
@@ -48,6 +54,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -56,6 +63,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by jhf on 2019/10/16.
@@ -90,10 +99,14 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
     LinearLayout linearTime;
     @BindView(R.id.scrollView)
     NestedScrollView mScrollView;
+    @BindView(R.id.imageViewFile)
+    ImageView imageViewFile;
 
     private String mTime = ""; // 定时时间
     private int mStringLength = 0; // 收件人联系电话长度
     private List<SortModel> mSortModels = new ArrayList<>();
+
+    private static final int REQUEST_CODE_CHOOSE = 23;
 
     @Nullable
     @Override
@@ -109,6 +122,19 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
     }
 
     private void initClick() {
+        imageViewFile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                VideoWebActivity.getInstance(getActivity());
+//                FilePicker.from(OneTabFragment.this)
+//                        .chooseForMimeType()
+//                        .setMaxCount(1)
+//                        .setFileTypes("vcf", "txt")
+//                        .requestCode(REQUEST_CODE_CHOOSE)
+//                        .start();
+            }
+        });
+
         if (!editTextFileContent.getText().toString().isEmpty()) {
             textViewYiXuan.setText(editTextFileContent.length() + "");
             textViewShengYu.setText(70 - editTextFileContent.length() + "");
@@ -232,6 +258,26 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
                 return false;
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != RESULT_OK) {
+            return;
+        }
+        if (requestCode == REQUEST_CODE_CHOOSE) {
+            ArrayList<EssFile> essFileList = data.getParcelableArrayListExtra(Const.EXTRA_RESULT_SELECTION);
+            StringBuilder builder = new StringBuilder();
+            for (EssFile file : essFileList) {
+                builder.append(file.getMimeType()).append(" | ").append(file.getName()).append("\n\n");
+            }
+            if (builder.toString().contains(".vcf")) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(Uri.fromFile(new File(builder.toString())),"text/x-vcard");
+                startActivity(intent);
+            }
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

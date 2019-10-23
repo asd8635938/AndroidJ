@@ -91,6 +91,11 @@
         </activity>
 
         <activity
+            android:name=".VideoWebActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden">
+        </activity>
+
+        <activity
             android:name=".activity.PhonePeopleActivity"
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:screenOrientation="portrait" />
