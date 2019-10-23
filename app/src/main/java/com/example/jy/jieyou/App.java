@@ -16,6 +16,7 @@ import com.scwang.smartrefresh.layout.api.RefreshHeader;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
+import com.tencent.smtt.sdk.QbSdk;
 
 import org.xutils.x;
 
@@ -52,6 +53,24 @@ public class App extends Application {
         x.Ext.setDebug(BuildConfig.DEBUG);
         initAria();
         initXiangJi();
+        initWeb();
+    }
+
+    private void initWeb() {
+        QbSdk.PreInitCallback cb = new QbSdk.PreInitCallback() {
+            @Override
+            public void onViewInitFinished(boolean arg0) {
+                // TODO Auto-generated method stub
+                //x5內核初始化完成的回调，为true表示x5内核加载成功，否则表示x5内核加载失败，会自动切换到系统内核。
+            }
+
+            @Override
+            public void onCoreInitFinished() {
+                // TODO Auto-generated method stub
+            }
+        };
+        //x5内核初始化接口
+        QbSdk.initX5Environment(getApplicationContext(),  cb);
     }
 
     private void initAria() {

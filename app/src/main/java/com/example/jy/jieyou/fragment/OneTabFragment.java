@@ -122,11 +122,10 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
     }
 
     private void initClick() {
-
         imageViewFile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                VideoWebActivity.mUrlString = editextFilePeople.getText().toString();
+//                VideoWebActivity.mUrlString = editTextFileContent.getText().toString();
 //                VideoWebActivity.getInstance(getActivity());
                 FilePicker.from(OneTabFragment.this)
                         .chooseForMimeType()
