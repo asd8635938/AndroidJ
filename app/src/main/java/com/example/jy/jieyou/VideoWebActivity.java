@@ -32,7 +32,6 @@ public class VideoWebActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.video_web_activity);
         webView =  findViewById(R.id.web_filechooser);
@@ -76,9 +75,7 @@ public class VideoWebActivity extends BaseActivity {
         try {
             super.onConfigurationChanged(newConfig);
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-
             } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -89,7 +86,6 @@ public class VideoWebActivity extends BaseActivity {
     // /////////////////////////////////////////
     // 向webview发出信息
     private void enableX5FullscreenFunc() {
-
         if (webView.getX5WebViewExtension() != null) {
             Toast.makeText(this, "开启X5全屏播放模式", Toast.LENGTH_LONG).show();
             Bundle data = new Bundle();

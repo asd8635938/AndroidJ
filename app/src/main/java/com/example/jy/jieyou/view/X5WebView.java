@@ -7,7 +7,6 @@ import android.graphics.Paint;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.TextView;
 
 import com.tencent.smtt.sdk.QbSdk;
 import com.tencent.smtt.sdk.WebSettings;
