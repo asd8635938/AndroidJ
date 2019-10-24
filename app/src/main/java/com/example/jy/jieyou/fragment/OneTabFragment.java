@@ -2,7 +2,6 @@ package com.example.jy.jieyou.fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -27,8 +26,8 @@ import com.bigkoo.pickerview.view.TimePickerView;
 import com.ess.filepicker.FilePicker;
 import com.ess.filepicker.model.EssFile;
 import com.ess.filepicker.util.Const;
+import com.example.jy.jieyou.utils.FileUtils;
 import com.example.jy.jieyou.R;
-import com.example.jy.jieyou.VideoWebActivity;
 import com.example.jy.jieyou.activity.PhonePeopleActivity;
 import com.example.jy.jieyou.base.BaseFragment;
 import com.example.jy.jieyou.bean.MessageEvent;
@@ -54,7 +53,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -130,7 +128,7 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
                 FilePicker.from(OneTabFragment.this)
                         .chooseForMimeType()
                         .setMaxCount(1)
-                        .setFileTypes("vcf", "txt")
+                        .setFileTypes("vcf", "txt", "xls","xlsx")
                         .requestCode(REQUEST_CODE_CHOOSE)
                         .start();
             }
@@ -167,6 +165,7 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
                     } else {
                         textViewFilePeopleAll.setText("已选1位");
                     }
+                    editextFilePeople.setSelection(editextFilePeople.getText().toString().length());
                 } else {
                     textViewFilePeopleAll.setText("已选0位");
                 }
@@ -269,12 +268,14 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
         }
         if (requestCode == REQUEST_CODE_CHOOSE) {
             ArrayList<EssFile> essFileList = data.getParcelableArrayListExtra(Const.EXTRA_RESULT_SELECTION);
-            StringBuilder builder = new StringBuilder();
-            for (EssFile file : essFileList) {
-                builder.append(file.getMimeType()).append(" | ").append(file.getName()).append("\n\n");
-            }
-            if (builder.toString().contains(".vcf")) {
-                
+            if (essFileList.get(0).getMimeType().contains("text/plain")) {
+                String mFile = FileUtils.ReadTxtFile(essFileList.get(0).getAbsolutePath());
+                String mString = mFile + editextFilePeople.getText().toString();
+                if (mString.endsWith(",")) {
+                    editextFilePeople.setText(mString.substring(0,mString.length() - 1));
+                } else {
+                    editextFilePeople.setText(mString);
+                }
             }
         }
     }

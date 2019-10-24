@@ -120,18 +120,18 @@ public class PhonePeopleActivity extends BaseActivity {
             PhoneUtil phoneUtil = new PhoneUtil(this);
             List<SortModel> mPhoneDtos = phoneUtil.getPhone();
 
-//            SortModel sortModel = new SortModel();
-//            sortModel.setTelPhone("1870000");
-//            sortModel.setName("小王");
-//            SortModel sortModel1 = new SortModel();
-//            sortModel1.setTelPhone("1870111");
-//            sortModel1.setName("小王11111");
-//            SortModel sortModel2 = new SortModel();
-//            sortModel2.setTelPhone("181");
-//            sortModel2.setName("小成11111");
-//            mPhoneDtos.add(sortModel);
-//            mPhoneDtos.add(sortModel1);
-//            mPhoneDtos.add(sortModel2);
+            SortModel sortModel = new SortModel();
+            sortModel.setTelPhone("1870000");
+            sortModel.setName("小王");
+            SortModel sortModel1 = new SortModel();
+            sortModel1.setTelPhone("1870111");
+            sortModel1.setName("小王11111");
+            SortModel sortModel2 = new SortModel();
+            sortModel2.setTelPhone("181");
+            sortModel2.setName("小成11111");
+            mPhoneDtos.add(sortModel);
+            mPhoneDtos.add(sortModel1);
+            mPhoneDtos.add(sortModel2);
 
             // 实例化汉字转拼音类
             characterParser = CharacterParser.getInstance();
