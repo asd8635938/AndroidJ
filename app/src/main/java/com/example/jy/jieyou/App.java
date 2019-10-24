@@ -49,11 +49,11 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
+        initWeb();
         x.Ext.init(this);
         x.Ext.setDebug(BuildConfig.DEBUG);
         initAria();
         initXiangJi();
-        initWeb();
     }
 
     private void initWeb() {
@@ -61,6 +61,7 @@ public class App extends Application {
             @Override
             public void onViewInitFinished(boolean arg0) {
                 // TODO Auto-generated method stub
+                System.out.println("arg0 = " + arg0);
                 //x5內核初始化完成的回调，为true表示x5内核加载成功，否则表示x5内核加载失败，会自动切换到系统内核。
             }
 

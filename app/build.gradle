@@ -131,5 +131,5 @@ dependencies {
     // 时间选择器
     compile 'com.contrarywind:Android-PickerView:4.1.8'
     // 腾讯X5WebView
-    api 'com.tencent.tbs.tbssdk:sdk:43697'
+    implementation 'com.tencent.tbs.tbssdk:sdk:43697'
 }

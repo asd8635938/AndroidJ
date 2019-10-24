@@ -274,9 +274,7 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
                 builder.append(file.getMimeType()).append(" | ").append(file.getName()).append("\n\n");
             }
             if (builder.toString().contains(".vcf")) {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setDataAndType(Uri.fromFile(new File(builder.toString())),"text/x-vcard");
-                startActivity(intent);
+                
             }
         }
     }

@@ -74,7 +74,6 @@ public class VideoWebActivity extends BaseActivity {
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-        // TODO Auto-generated method stub
         try {
             super.onConfigurationChanged(newConfig);
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
