@@ -44,7 +44,8 @@ dependencies {
 
     // eventbus
     implementation 'org.greenrobot:eventbus:3.1.1'
-//    annotationProcessor 'org.greenrobot:eventbus-annotation-processor:3.1.1'
+
+    //    annotationProcessor 'org.greenrobot:eventbus-annotation-processor:3.1.1'
 
     // Tab选项卡
     implementation 'com.shizhefei:ViewPagerIndicator:1.1.7'
@@ -119,17 +120,25 @@ dependencies {
     compile 'com.lzy.widget:view-core:0.2.1'
 
     // 文件选择器
-    implementation 'cn.imlibo:FilePicker:v0.0.5_alpha'
+    implementation project(':filepicker')
 
     // 文件下载
     implementation 'com.arialyy.aria:aria-core:3.6.4'
     annotationProcessor 'com.arialyy.aria:aria-compiler:3.6.4'
+
     // 下载刷新组件
     implementation 'in.srain.cube:ultra-ptr:1.0.11'
+
     // 底部导航栏
     compile 'com.github.forvv231:EasyNavigation:1.0.3'
+
     // 时间选择器
     compile 'com.contrarywind:Android-PickerView:4.1.8'
+
     // 腾讯X5WebView
     implementation 'com.tencent.tbs.tbssdk:sdk:43697'
+
+    // vcf文件读取
+    implementation files('libs/cardme-0.4.0.jar')
+    implementation files('libs/commons-codec-1.5.jar')
 }

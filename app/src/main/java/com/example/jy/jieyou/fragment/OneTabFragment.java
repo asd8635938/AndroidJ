@@ -23,7 +23,6 @@ import android.widget.Toast;
 import com.bigkoo.pickerview.builder.TimePickerBuilder;
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
-import com.ess.filepicker.FilePicker;
 import com.ess.filepicker.model.EssFile;
 import com.ess.filepicker.util.Const;
 import com.example.jy.jieyou.utils.FileUtils;
@@ -39,6 +38,7 @@ import com.example.jy.jieyou.phone.SortModel;
 import com.example.jy.jieyou.request.Request;
 import com.example.jy.jieyou.utils.DateUtils;
 import com.example.jy.jieyou.utils.SoftKeyboardUtils;
+import com.example.jy.jieyou.vcard.VcFileUtils;
 import com.example.jy.jieyou.view.EditTextWithScrollView;
 import com.gyf.immersionbar.ImmersionBar;
 import com.gyf.immersionbar.components.SimpleImmersionOwner;
@@ -125,12 +125,17 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
             public void onClick(View view) {
 //                VideoWebActivity.mUrlString = editTextFileContent.getText().toString();
 //                VideoWebActivity.getInstance(getActivity());
-                FilePicker.from(OneTabFragment.this)
-                        .chooseForMimeType()
-                        .setMaxCount(1)
-                        .setFileTypes("vcf", "txt", "xls","xlsx")
-                        .requestCode(REQUEST_CODE_CHOOSE)
-                        .start();
+//                FilePicker.from(OneTabFragment.this)
+//                        .chooseForBrowser()
+//                        .setMaxCount(1)
+////                        , "xls","xlsx"
+//                        .setFileTypes("vcf", "txt")
+//                        .requestCode(REQUEST_CODE_CHOOSE)
+//                        .start();
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("*/*");
+                startActivityForResult(intent, REQUEST_CODE_CHOOSE);
             }
         });
 
@@ -165,7 +170,6 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
                     } else {
                         textViewFilePeopleAll.setText("已选1位");
                     }
-                    editextFilePeople.setSelection(editextFilePeople.getText().toString().length());
                 } else {
                     textViewFilePeopleAll.setText("已选0位");
                 }
@@ -227,7 +231,11 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
                 HashMap<String, Object> mHashMap = new HashMap<>();
                 Request request = new Request();
                 mHashMap.put("action", "send");
-                mHashMap.put("mobile", editextFilePeople.getText().toString());
+                if (editextFilePeople.getText().toString().endsWith(",")) {
+                    mHashMap.put("mobile", editextFilePeople.getText().toString().substring(0, editextFilePeople.getText().toString().length() - 1));
+                } else {
+                    mHashMap.put("mobile", editextFilePeople.getText().toString());
+                }
                 mHashMap.put("userid", "51");
                 mHashMap.put("timestamp", request.getTimestamp());
                 mHashMap.put("sendTime", mTime);
@@ -268,13 +276,28 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
         }
         if (requestCode == REQUEST_CODE_CHOOSE) {
             ArrayList<EssFile> essFileList = data.getParcelableArrayListExtra(Const.EXTRA_RESULT_SELECTION);
-            if (essFileList.get(0).getMimeType().contains("text/plain")) {
-                String mFile = FileUtils.ReadTxtFile(essFileList.get(0).getAbsolutePath());
-                String mString = mFile + editextFilePeople.getText().toString();
-                if (mString.endsWith(",")) {
-                    editextFilePeople.setText(mString.substring(0,mString.length() - 1));
+            if (essFileList.size() > 0) {
+                String mString = "";
+                if (essFileList.get(0).getMimeType().contains("text/plain")) {
+                    String mFile = FileUtils.ReadTxtFile(essFileList.get(0).getAbsolutePath()).trim();
+                    if (mFile.isEmpty()) {
+                        Toast.makeText(getActivity(),"您选择的txt文件格式不正确",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    mString = mFile + editextFilePeople.getText().toString().trim();
+                } else if (essFileList.get(0).getMimeType().contains("text/x-vcard")) {
+                    String mFile = VcFileUtils.getVcFile(essFileList.get(0).getAbsolutePath()).trim();
+                    mString = mFile + editextFilePeople.getText().toString().trim();
+                }
+                mString.replace("-","").trim();
+                if (!mString.isEmpty() && mString.endsWith(",")) {
+                    editextFilePeople.setText(mString.substring(0,mString.length() - 1).trim());
                 } else {
-                    editextFilePeople.setText(mString);
+                    editextFilePeople.setText(mString.trim());
+                }
+
+                if (!editextFilePeople.getText().toString().isEmpty()) {
+                    editextFilePeople.setSelection(editextFilePeople.getText().toString().length());
                 }
             }
         }
@@ -291,27 +314,28 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
         }
 
         if (mString.isEmpty()) {
-            if (editextFilePeople.getText().toString().isEmpty()) {
-                editextFilePeople.setText("");
-                textViewFilePeopleAll.setText("已选0位");
-            } else {
-                String mReplace = "";
-                for (int i = 0; i < PhonePeopleActivity.mSortModel.size(); i++) {
-                    if (editextFilePeople.getText().toString().contains(PhonePeopleActivity.mSortModel.get(i).getTelPhone() + ",")) {
-                        mReplace = editextFilePeople.getText().toString().replace(PhonePeopleActivity.mSortModel.get(i).getTelPhone() + ",", "");
-                        editextFilePeople.setText(mReplace);
-                    } else if (editextFilePeople.getText().toString().contains(PhonePeopleActivity.mSortModel.get(i).getTelPhone())) {
-                        mReplace = editextFilePeople.getText().toString().replace(PhonePeopleActivity.mSortModel.get(i).getTelPhone(), "");
-                        editextFilePeople.setText(mReplace);
-                    }
-                }
-                if (!mReplace.isEmpty() && mReplace.endsWith(",")) {
-                    editextFilePeople.setText(mReplace.substring(0, mReplace.length() - 1));
-                } else {
-                    editextFilePeople.setText(mReplace);
-                }
-            }
+//            if (editextFilePeople.getText().toString().isEmpty()) {
+//                editextFilePeople.setText("");
+//                textViewFilePeopleAll.setText("已选0位");
+//            } else {
+//                String mReplace = "";
+//                for (int i = 0; i < PhonePeopleActivity.mSortModel.size(); i++) {
+//                    if (editextFilePeople.getText().toString().contains(PhonePeopleActivity.mSortModel.get(i).getTelPhone() + ",")) {
+//                        mReplace = editextFilePeople.getText().toString().replace(PhonePeopleActivity.mSortModel.get(i).getTelPhone() + ",", "");
+//                        editextFilePeople.setText(mReplace);
+//                    } else if (editextFilePeople.getText().toString().contains(PhonePeopleActivity.mSortModel.get(i).getTelPhone())) {
+//                        mReplace = editextFilePeople.getText().toString().replace(PhonePeopleActivity.mSortModel.get(i).getTelPhone(), "");
+//                        editextFilePeople.setText(mReplace);
+//                    }
+//                }
+//                if (!mReplace.isEmpty() && mReplace.endsWith(",")) {
+//                    editextFilePeople.setText(mReplace.substring(0, mReplace.length() - 1));
+//                } else {
+//                    editextFilePeople.setText(mReplace);
+//                }
+//            }
         } else {
+            mString = mString.replace("-", "").trim();
             if (editextFilePeople.getText().toString().isEmpty()) {
                 editextFilePeople.setText(mString.trim().substring(0, mString.length() - 1));
             } else {
@@ -322,6 +346,10 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
                 }
             }
             textViewFilePeopleAll.setText("已选" + mStringLength + "位");
+        }
+
+        if (!editextFilePeople.getText().toString().isEmpty()) {
+            editextFilePeople.setSelection(editextFilePeople.getText().toString().length());
         }
     }
 

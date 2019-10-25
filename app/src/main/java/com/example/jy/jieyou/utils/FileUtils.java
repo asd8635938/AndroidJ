@@ -1,5 +1,6 @@
 package com.example.jy.jieyou.utils;
 
+import android.content.Context;
 import android.util.Log;
 import java.io.BufferedReader;
 import java.io.File;
@@ -7,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.regex.Pattern;
 
 /**
  * Created by jhf on 2019/10/24.
@@ -32,6 +34,9 @@ public class FileUtils {
                     //分行读取
                     while ((line = buffreader.readLine()) != null) {
                         content += line + ",";
+                        if (isENChar(content)) {
+                            return "";
+                        }
                     }
                     instream.close();
                 }
@@ -42,5 +47,17 @@ public class FileUtils {
             }
         }
         return content;
+    }
+
+    /*
+     * 判断字符串中是否含有英文，包含返回true
+     */
+    public static boolean isENChar(String string) {
+        boolean flag = false;
+        Pattern p = Pattern.compile("[a-zA-z]");
+        if(p.matcher(string).find()) {
+            flag = true;
+        }
+        return flag;
     }
 }

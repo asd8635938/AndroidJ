@@ -1,1 +1,1 @@
-include ':app', ':takephoto_library', ':loadingdialog'
+include ':app', ':takephoto_library', ':loadingdialog', ':filepicker'

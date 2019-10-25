@@ -1,7 +1,9 @@
 package com.example.jy.jieyou;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
@@ -85,6 +87,11 @@ public class MainActivity extends BaseActivity {
 
                     }
                 });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     // 用来计算返回键的点击间隔时间
