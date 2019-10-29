@@ -14,5 +14,7 @@ public class BaseActivity extends AppCompatActivity {
     public static String mBulide = "mBulidId";
     public static String mDATA = "mData";
 
+    public static String mSpSettingContent = "mSpSettingContent";
+
 
 }

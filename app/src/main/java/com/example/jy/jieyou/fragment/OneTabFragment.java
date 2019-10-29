@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.bigkoo.pickerview.builder.TimePickerBuilder;
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
+import com.example.jy.jieyou.activity.SettingSignActivity;
 import com.example.jy.jieyou.utils.FileUtils;
 import com.example.jy.jieyou.R;
 import com.example.jy.jieyou.activity.PhonePeopleActivity;
@@ -96,6 +97,10 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
     NestedScrollView mScrollView;
     @BindView(R.id.imageViewFile)
     ImageView imageViewFile;
+    @BindView(R.id.textViewSign)
+    TextView textViewSign;
+    @BindView(R.id.textViewSignName)
+    TextView textViewSignName;
 
     private String mTime = ""; // 定时时间
     private int mStringLength = 0; // 收件人联系电话长度
@@ -117,6 +122,13 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
     }
 
     private void initClick() {
+        textViewSign.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SettingSignActivity.getInstance(getActivity());
+            }
+        });
+
         imageViewFile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

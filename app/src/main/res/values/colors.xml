@@ -22,10 +22,12 @@
     <color name="white">#FFFFFF</color>
     <color name="green_back">#8cb46c</color>
     <color name="tabf1f1f1">#F1F1F1</color>
+    <color name="tabf6a707b">#6A707B</color>
     <color name="huangse">#e78c20</color>
     <color name="red">#f11c15</color>
     <color name="tab7b818b">#7B818B</color>
     <color name="tab7c8392">#7c8392</color>
+    <color name="tab5e5e5e">#5e5e5e</color>
     <color name="orange">#ecb433</color>
     <color name="text889aad">#889aad</color>
     <color name="seach_background">#ccd9e7</color>

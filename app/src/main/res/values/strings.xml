@@ -1,4 +1,5 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">短信群发软件</string>
     <string name="edittext_content">【影程科技】尊敬的用户，您的验证码为：019527，感谢您的支持！</string>
+    <string name="setting_content">106短信中必须使用签名，可设置最多五个签名内容，一行一个。新增签名时，填写中文内容即可，程序将自动加上【】签名标记。</string>
 </resources>
