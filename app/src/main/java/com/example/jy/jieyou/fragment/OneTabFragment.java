@@ -2,6 +2,8 @@ package com.example.jy.jieyou.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,8 +25,6 @@ import android.widget.Toast;
 import com.bigkoo.pickerview.builder.TimePickerBuilder;
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
-import com.ess.filepicker.model.EssFile;
-import com.ess.filepicker.util.Const;
 import com.example.jy.jieyou.utils.FileUtils;
 import com.example.jy.jieyou.R;
 import com.example.jy.jieyou.activity.PhonePeopleActivity;
@@ -58,11 +58,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by jhf on 2019/10/16.
@@ -123,18 +120,9 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
         imageViewFile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                VideoWebActivity.mUrlString = editTextFileContent.getText().toString();
-//                VideoWebActivity.getInstance(getActivity());
-//                FilePicker.from(OneTabFragment.this)
-//                        .chooseForBrowser()
-//                        .setMaxCount(1)
-////                        , "xls","xlsx"
-//                        .setFileTypes("vcf", "txt")
-//                        .requestCode(REQUEST_CODE_CHOOSE)
-//                        .start();
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("*/*");//无类型限制
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType("*/*");
                 startActivityForResult(intent, REQUEST_CODE_CHOOSE);
             }
         });
@@ -271,29 +259,43 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != RESULT_OK) {
+        if (resultCode == 0) {
             return;
         }
         if (requestCode == REQUEST_CODE_CHOOSE) {
-            ArrayList<EssFile> essFileList = data.getParcelableArrayListExtra(Const.EXTRA_RESULT_SELECTION);
-            if (essFileList.size() > 0) {
+            Uri uri = data.getData();
+            String mPath;
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {//4.4以后
+                mPath = FileUtils.getPath(uri,getActivity());
+            } else {//4.4以下下系统调用方法
+                mPath = FileUtils.getRealPathFromURI(uri,getActivity());
+            }
+
+            if (mPath != null && !mPath.isEmpty()) {
                 String mString = "";
-                if (essFileList.get(0).getMimeType().contains("text/plain")) {
-                    String mFile = FileUtils.ReadTxtFile(essFileList.get(0).getAbsolutePath()).trim();
+                if (mPath.contains(".txt")) {
+                    String mFile = FileUtils.ReadTxtFile(mPath).trim();
                     if (mFile.isEmpty()) {
                         Toast.makeText(getActivity(),"您选择的txt文件格式不正确",Toast.LENGTH_SHORT).show();
                         return;
                     }
                     mString = mFile + editextFilePeople.getText().toString().trim();
-                } else if (essFileList.get(0).getMimeType().contains("text/x-vcard")) {
-                    String mFile = VcFileUtils.getVcFile(essFileList.get(0).getAbsolutePath()).trim();
+                } else if (mPath.contains(".vcf")) {
+                    String mFile = VcFileUtils.getVcFile(mPath).trim();
+                    if (mFile.isEmpty()) {
+                        Toast.makeText(getActivity(),"您选择的vcf文件格式不正确",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     mString = mFile + editextFilePeople.getText().toString().trim();
                 }
-                mString.replace("-","").trim();
-                if (!mString.isEmpty() && mString.endsWith(",")) {
-                    editextFilePeople.setText(mString.substring(0,mString.length() - 1).trim());
-                } else {
-                    editextFilePeople.setText(mString.trim());
+
+                if (!mString.isEmpty()) {
+                    mString.replace("-","").trim();
+                    if (mString.endsWith(",")) {
+                        editextFilePeople.setText(mString.substring(0,mString.length() - 1).trim());
+                    } else {
+                        editextFilePeople.setText(mString.trim());
+                    }
                 }
 
                 if (!editextFilePeople.getText().toString().isEmpty()) {
