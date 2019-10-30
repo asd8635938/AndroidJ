@@ -220,8 +220,7 @@
                     android:drawablePadding="3dp"
                     android:drawableRight="@mipmap/tab_down"
                     android:paddingLeft="5dp"
-                    android:paddingRight="10dp"
-                    android:text="影程科技"
+                    android:paddingRight="20dp"
                     android:textColor="@color/tab_blue"
                     android:textSize="@dimen/sp14" />
 

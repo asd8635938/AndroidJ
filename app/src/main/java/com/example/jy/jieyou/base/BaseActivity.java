@@ -15,6 +15,7 @@ public class BaseActivity extends AppCompatActivity {
     public static String mDATA = "mData";
 
     public static String mSpSettingContent = "mSpSettingContent";
+    public static String mEventSettingSign = "mEventSettingSign";
 
 
 }

@@ -138,6 +138,9 @@ dependencies {
     // 腾讯X5WebView
     implementation 'com.tencent.tbs.tbssdk:sdk:43697'
 
+    // popupWindow
+    implementation 'com.lxj:xpopup:1.8.8'
+
     // vcf文件读取
     implementation files('libs/cardme-0.4.0.jar')
     implementation files('libs/commons-codec-1.5.jar')

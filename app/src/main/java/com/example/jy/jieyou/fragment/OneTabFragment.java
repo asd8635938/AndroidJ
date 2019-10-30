@@ -26,6 +26,7 @@ import com.bigkoo.pickerview.builder.TimePickerBuilder;
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
 import com.example.jy.jieyou.activity.SettingSignActivity;
+import com.example.jy.jieyou.base.BaseActivity;
 import com.example.jy.jieyou.utils.FileUtils;
 import com.example.jy.jieyou.R;
 import com.example.jy.jieyou.activity.PhonePeopleActivity;
@@ -38,11 +39,15 @@ import com.example.jy.jieyou.manager.onNetCallbackListener;
 import com.example.jy.jieyou.phone.SortModel;
 import com.example.jy.jieyou.request.Request;
 import com.example.jy.jieyou.utils.DateUtils;
+import com.example.jy.jieyou.utils.SPUtils;
 import com.example.jy.jieyou.utils.SoftKeyboardUtils;
 import com.example.jy.jieyou.vcard.VcFileUtils;
 import com.example.jy.jieyou.view.EditTextWithScrollView;
 import com.gyf.immersionbar.ImmersionBar;
 import com.gyf.immersionbar.components.SimpleImmersionOwner;
+import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.core.BasePopupView;
+import com.lxj.xpopup.interfaces.OnSelectListener;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.Transformer;
@@ -55,10 +60,12 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -105,6 +112,8 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
     private String mTime = ""; // 定时时间
     private int mStringLength = 0; // 收件人联系电话长度
     private List<SortModel> mSortModels = new ArrayList<>();
+    private BasePopupView mPopupView;
+    private String[] mArrayList = new String[5];
 
     private static final int REQUEST_CODE_CHOOSE = 23;
 
@@ -122,6 +131,26 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
     }
 
     private void initClick() {
+        textViewSignName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mArrayList.length > 0) {
+                    if (mPopupView == null) {
+                        mPopupView = new XPopup.Builder(getActivity())
+                                .autoOpenSoftInput(true).asBottomList("请选择一项", mArrayList, new OnSelectListener() {
+                                    @Override
+                                    public void onSelect(int position, String text) {
+                                        textViewSignName.setText(text);
+                                    }
+                                });
+                    }
+                    mPopupView.show();
+                } else {
+                    Toast.makeText(getActivity(),"暂无签名信息，请您设置签名信息。",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         textViewSign.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -278,9 +307,9 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
             Uri uri = data.getData();
             String mPath;
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {//4.4以后
-                mPath = FileUtils.getPath(uri,getActivity());
+                mPath = FileUtils.getPath(uri, getActivity());
             } else {//4.4以下下系统调用方法
-                mPath = FileUtils.getRealPathFromURI(uri,getActivity());
+                mPath = FileUtils.getRealPathFromURI(uri, getActivity());
             }
 
             if (mPath != null && !mPath.isEmpty()) {
@@ -288,23 +317,23 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
                 if (mPath.contains(".txt")) {
                     String mFile = FileUtils.ReadTxtFile(mPath).trim();
                     if (mFile.isEmpty()) {
-                        Toast.makeText(getActivity(),"您选择的txt文件格式不正确",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "您选择的txt文件格式不正确", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     mString = mFile + editextFilePeople.getText().toString().trim();
                 } else if (mPath.contains(".vcf")) {
                     String mFile = VcFileUtils.getVcFile(mPath).trim();
                     if (mFile.isEmpty()) {
-                        Toast.makeText(getActivity(),"您选择的vcf文件格式不正确",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "您选择的vcf文件格式不正确", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     mString = mFile + editextFilePeople.getText().toString().trim();
                 }
 
                 if (!mString.isEmpty()) {
-                    mString.replace("-","").trim();
+                    mString.replace("-", "").trim();
                     if (mString.endsWith(",")) {
-                        editextFilePeople.setText(mString.substring(0,mString.length() - 1).trim());
+                        editextFilePeople.setText(mString.substring(0, mString.length() - 1).trim());
                     } else {
                         editextFilePeople.setText(mString.trim());
                     }
@@ -313,6 +342,24 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
                 if (!editextFilePeople.getText().toString().isEmpty()) {
                     editextFilePeople.setSelection(editextFilePeople.getText().toString().length());
                 }
+            }
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(String mString) {
+        if (mString.equals(BaseActivity.mEventSettingSign)) {
+            String mS = (String) SPUtils.get(getActivity(), BaseActivity.mSpSettingContent, mString);
+            if (mS != null && !mS.isEmpty()) {
+                String[] mList = mS.split("\\\n");
+                if (mList.length > 5) {
+                    for (int i = 0; i < 5; i++) {
+                        mArrayList[i] = mList[i];
+                    }
+                } else {
+                    mArrayList = mList;
+                }
+                textViewSignName.setText(mArrayList[0]);
             }
         }
     }
@@ -375,6 +422,19 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
                 PhonePeopleActivity.getInstance(getActivity(), mSortModels);
             }
         });
+
+        String mS = (String) SPUtils.get(getActivity(), BaseActivity.mSpSettingContent, new String());
+        if (mS != null && !mS.isEmpty()) {
+            String[] mList = mS.split("\\\n");
+            if (mList.length > 5) {
+                for (int i = 0; i < 5; i++) {
+                    mArrayList[i] = mList[i];
+                }
+            } else {
+                mArrayList = mList;
+            }
+            textViewSignName.setText(mArrayList[0]);
+        }
     }
 
     private void initViewPager(ArrayList<String> bannerList) {
@@ -390,7 +450,7 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
         //设置标题集合（当banner样式有显示title时）
 //        banner.setBannerTitles(titleList);
         //设置banner动画效果
-        banner.setBannerAnimation(Transformer.Accordion);
+        banner.setBannerAnimation(Transformer.Default);
         //设置自动轮播，默认为true
         banner.isAutoPlay(true);
         //设置轮播时间
@@ -434,7 +494,6 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
     private void initScoll() {
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
     }
-
 
     @Override
     public boolean immersionBarEnabled() {

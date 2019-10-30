@@ -7,12 +7,15 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.jy.jieyou.R;
 import com.example.jy.jieyou.base.BaseActivity;
 import com.example.jy.jieyou.utils.SPUtils;
 import com.example.jy.jieyou.view.EditTextWithScrollView;
 import com.gyf.immersionbar.ImmersionBar;
+
+import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,7 +35,7 @@ public class SettingSignActivity extends BaseActivity {
     private Context mContext;
 
     public static void getInstance(Context context) {
-        Intent intent = new Intent(context, PhonePeopleActivity.class);
+        Intent intent = new Intent(context, SettingSignActivity.class);
         context.startActivity(intent);
     }
 
@@ -64,7 +67,12 @@ public class SettingSignActivity extends BaseActivity {
         textViewPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (editTextFileContent.getText().toString().isEmpty()) {
+                    Toast.makeText(mContext,"请输入签名信息",Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 SPUtils.put(mContext,mSpSettingContent,editTextFileContent.getText().toString());
+                EventBus.getDefault().post(mEventSettingSign);
                 finish();
             }
         });
