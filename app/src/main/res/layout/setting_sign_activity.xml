@@ -41,7 +41,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
             android:text="@string/setting_content"
-            android:textColor="@color/tabf6a707b"
+            android:textColor="@color/tab6a707b"
             android:textSize="@dimen/sp12" />
 
         <TextView
