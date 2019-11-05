@@ -8,6 +8,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -120,18 +121,18 @@ public class PhonePeopleActivity extends BaseActivity {
             PhoneUtil phoneUtil = new PhoneUtil(this);
             List<SortModel> mPhoneDtos = phoneUtil.getPhone();
 
-            SortModel sortModel = new SortModel();
-            sortModel.setTelPhone("1870000");
-            sortModel.setName("小王");
-            SortModel sortModel1 = new SortModel();
-            sortModel1.setTelPhone("1870111");
-            sortModel1.setName("小王11111");
-            SortModel sortModel2 = new SortModel();
-            sortModel2.setTelPhone("181");
-            sortModel2.setName("小成11111");
-            mPhoneDtos.add(sortModel);
-            mPhoneDtos.add(sortModel1);
-            mPhoneDtos.add(sortModel2);
+//            SortModel sortModel = new SortModel();
+//            sortModel.setTelPhone("1870000");
+//            sortModel.setName("小王");
+//            SortModel sortModel1 = new SortModel();
+//            sortModel1.setTelPhone("1870111");
+//            sortModel1.setName("小王11111");
+//            SortModel sortModel2 = new SortModel();
+//            sortModel2.setTelPhone("181");
+//            sortModel2.setName("小成11111");
+//            mPhoneDtos.add(sortModel);
+//            mPhoneDtos.add(sortModel1);
+//            mPhoneDtos.add(sortModel2);
 
             // 实例化汉字转拼音类
             characterParser = CharacterParser.getInstance();
@@ -240,12 +241,14 @@ public class PhonePeopleActivity extends BaseActivity {
     }
 
     public class SortAdapter extends BaseAdapter implements SectionIndexer {
-        private List<SortModel> list = null;
+        private List<SortModel> list;
         private Context mContext;
 
         final class ViewHolder {
             TextView tvLetter;
             TextView tvTitle;
+            CheckBox mCheckBox;
+            LinearLayout lineView;
         }
 
         public SortAdapter(Context mContext, List<SortModel> list) {
@@ -276,13 +279,15 @@ public class PhonePeopleActivity extends BaseActivity {
         }
 
         public View getView(final int position, View view, ViewGroup arg2) {
-            SortAdapter.ViewHolder viewHolder;
+            final SortAdapter.ViewHolder viewHolder;
             final SortModel mContent = list.get(position);
             if (view == null) {
                 viewHolder = new SortAdapter.ViewHolder();
                 view = LayoutInflater.from(mContext).inflate(R.layout.item_sort_listview, null);
                 viewHolder.tvTitle = view.findViewById(R.id.title);
                 viewHolder.tvLetter = view.findViewById(R.id.catalog);
+                viewHolder.mCheckBox = view.findViewById(R.id.mCheckBox);
+                viewHolder.lineView = view.findViewById(R.id.lineView);
                 view.setTag(viewHolder);
             } else {
                 viewHolder = (SortAdapter.ViewHolder) view.getTag();
@@ -301,22 +306,22 @@ public class PhonePeopleActivity extends BaseActivity {
 
             viewHolder.tvTitle.setText(this.list.get(position).getName());
 
-            final ViewHolder finalViewHolder = viewHolder;
             if (list.get(position).isClick()) {
-                finalViewHolder.tvTitle.setBackgroundResource(R.color.bg_common);
+                viewHolder.mCheckBox.setChecked(true);
             } else {
-                finalViewHolder.tvTitle.setBackgroundResource(R.color.white);
+                viewHolder.mCheckBox.setChecked(false);
             }
-            viewHolder.tvTitle.setOnClickListener(new View.OnClickListener() {
+
+            viewHolder.lineView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     SoftKeyboardUtils.hideSoftKeyboard(PhonePeopleActivity.this);
                     if (mContent.isClick()) {
-                        finalViewHolder.tvTitle.setBackgroundResource(R.color.white);
+                        viewHolder.mCheckBox.setChecked(false);
                         mContent.setClick(false);
                         initAdd();
                     } else {
-                        finalViewHolder.tvTitle.setBackgroundResource(R.color.bg_common);
+                        viewHolder.mCheckBox.setChecked(true);
                         mContent.setClick(true);
                         initAdd();
                     }
