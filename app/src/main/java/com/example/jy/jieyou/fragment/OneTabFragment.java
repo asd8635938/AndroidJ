@@ -60,6 +60,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -107,12 +108,14 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
     TextView textViewSign;
     @BindView(R.id.textViewSignName)
     TextView textViewSignName;
+    @BindView(R.id.textViewFragment2)
+    TextView textViewFragment2;
 
     private String mTime = ""; // 定时时间
     private int mStringLength = 0; // 收件人联系电话长度
     private List<SortModel> mSortModels = new ArrayList<>();
     private BasePopupView mPopupView;
-    private String[] mArrayList = new String[5];
+    private List<String> mArrayList = new ArrayList<>();
 
     private static final int REQUEST_CODE_CHOOSE = 23;
 
@@ -130,22 +133,28 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
     }
 
     private void initClick() {
+        textViewFragment2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EventBus.getDefault().post(BaseActivity.mEventTowTabFragment);
+            }
+        });
+
         textViewSignName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mArrayList.length > 0) {
-                    if (mPopupView == null) {
-                        mPopupView = new XPopup.Builder(getActivity())
-                                .autoOpenSoftInput(true).asBottomList("请选择一项", mArrayList, new OnSelectListener() {
-                                    @Override
-                                    public void onSelect(int position, String text) {
-                                        textViewSignName.setText(text);
-                                    }
-                                });
-                    }
+                if (mArrayList.size() > 0) {
+                    String[] array = new String[mArrayList.size()];
+                    mPopupView = new XPopup.Builder(getActivity())
+                            .autoOpenSoftInput(true).asBottomList("请选择一项", mArrayList.toArray(array), new OnSelectListener() {
+                                @Override
+                                public void onSelect(int position, String text) {
+                                    textViewSignName.setText(text);
+                                }
+                            });
                     mPopupView.show();
                 } else {
-                    Toast.makeText(getActivity(),"暂无签名信息，请您设置签名信息。",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "暂无签名信息，请您设置签名信息。", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -350,15 +359,17 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
         if (mString.equals(BaseActivity.mEventSettingSign)) {
             String mS = (String) SPUtils.get(getActivity(), BaseActivity.mSpSettingContent, mString);
             if (mS != null && !mS.isEmpty()) {
+                mArrayList = new ArrayList<>();
                 String[] mList = mS.split("\\\n");
                 if (mList.length > 5) {
+                    List<String> strings = Arrays.asList(mList);
                     for (int i = 0; i < 5; i++) {
-                        mArrayList[i] = mList[i];
+                        mArrayList.add(strings.get(i));
                     }
                 } else {
-                    mArrayList = mList;
+                    mArrayList = Arrays.asList(mList);
                 }
-                textViewSignName.setText(mArrayList[0]);
+                textViewSignName.setText(mArrayList.get(0));
             }
         }
     }
@@ -426,13 +437,14 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
         if (mS != null && !mS.isEmpty()) {
             String[] mList = mS.split("\\\n");
             if (mList.length > 5) {
+                List<String> strings = Arrays.asList(mList);
                 for (int i = 0; i < 5; i++) {
-                    mArrayList[i] = mList[i];
+                    mArrayList.add(strings.get(i));
                 }
             } else {
-                mArrayList = mList;
+                mArrayList = Arrays.asList(mList);
             }
-            textViewSignName.setText(mArrayList[0]);
+            textViewSignName.setText(mArrayList.get(0));
         }
     }
 

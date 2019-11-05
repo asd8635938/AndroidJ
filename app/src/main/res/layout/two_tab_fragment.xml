@@ -11,4 +11,39 @@
         android:layout_height="@dimen/title"
         android:layout_marginTop="@dimen/status_bar_height" />
 
+    <EditText
+        android:id="@+id/editextFilePeople"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/shape_two_search"
+        android:drawableRight="@mipmap/search"
+        android:hint="搜索您想要的模板吧！"
+        android:imeOptions="actionSearch"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="10dp"
+        android:singleLine="true"
+        android:textColor="@color/tab7b818b"
+        android:textColorHint="@color/tab9c9c9c"
+        android:textSize="@dimen/sp13" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="15dp"
+        android:background="@color/tabf1f1f1"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/mRecyclerView"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
 </LinearLayout>

@@ -12,6 +12,7 @@
     <color name="green">#5ff163</color>
     <color name="green1">#18a31b</color>
     <color name="zise">#7f16bc</color>
+    <color name="tabffee52">#FFEE52</color>
     <color name="ditie">#bc16a3</color>
     <color name="canyi">#bc7a16</color>
     <color name="shangye">#d1ba10</color>
@@ -27,7 +28,10 @@
     <color name="huangse">#e78c20</color>
     <color name="red">#f11c15</color>
     <color name="tab7b818b">#7B818B</color>
+    <color name="tab9c9c9c">#9c9c9c</color>
     <color name="tab7c8392">#7c8392</color>
+    <color name="tab9299A6">#9299A6</color>
+    <color name="tab838B9C">#838B9C</color>
     <color name="tab5e5e5e">#5e5e5e</color>
     <color name="orange">#ecb433</color>
     <color name="text889aad">#889aad</color>

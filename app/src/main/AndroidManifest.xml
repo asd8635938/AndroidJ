@@ -101,6 +101,10 @@
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <activity
+            android:name=".activity.MessageMouldActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".activity.SettingSignActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />

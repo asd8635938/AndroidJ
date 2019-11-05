@@ -18,6 +18,10 @@ import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
 import com.next.easynavigation.view.EasyNavigationBar;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +49,7 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         ImmersionBar.with(this).navigationBarColor(R.color.white).statusBarDarkFont(true).init();
         ButterKnife.bind(this);
+        EventBus.getDefault().register(this);
         mContext = MainActivity.this;
 
         initPermiss();
@@ -89,9 +94,24 @@ public class MainActivity extends BaseActivity {
                 });
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(String mResult) {
+        if (mResult.equals(BaseActivity.mEventTowTabFragment)) {
+            navigationBar.getmViewPager().setCurrentItem(1);
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
     }
 
     // 用来计算返回键的点击间隔时间

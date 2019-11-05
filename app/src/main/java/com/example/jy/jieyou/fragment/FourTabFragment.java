@@ -28,6 +28,9 @@ public class FourTabFragment extends BaseFragment implements SimpleImmersionOwne
     @BindView(R.id.titleLeft)
     ImageView titleLeft;
 
+    @BindView(R.id.imageViewHeader)
+    ImageView imageViewHeader;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -35,7 +38,24 @@ public class FourTabFragment extends BaseFragment implements SimpleImmersionOwne
         ButterKnife.bind(this,mView);
         titleCenterName.setText("我的");
         titleLeft.setVisibility(View.GONE);
+
+        initView();
+        initClick();
+
         return mView;
+    }
+
+    private void initView() {
+
+    }
+
+    private void initClick() {
+        imageViewHeader.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
     }
 
     @Override
