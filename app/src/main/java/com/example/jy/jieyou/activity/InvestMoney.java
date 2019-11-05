@@ -84,7 +84,7 @@ public class InvestMoney extends BaseActivity {
         mList.add(mData5);
 
         mRecyclerView.setLayoutManager(new GridLayoutManager(mContext, 3));
-        mRecyclerView.addItemDecoration(new SpaceItemDecoration(20, 20, 40, 0));
+        mRecyclerView.addItemDecoration(new SpaceItemDecoration(15, 15, 15, 0));
         mAdapter = new GridAdapter(mContext);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.setNewData(mList);
