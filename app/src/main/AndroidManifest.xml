@@ -105,6 +105,22 @@
             android:screenOrientation="portrait" />
 
         <activity
+            android:name=".activity.HelpActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activity.SettingActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activity.FeedBackActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activity.InvestMoney"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".activity.SettingSignActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustResize" />

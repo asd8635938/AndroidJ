@@ -7,9 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.jy.jieyou.R;
+import com.example.jy.jieyou.activity.HelpActivity;
+import com.example.jy.jieyou.activity.InvestMoney;
+import com.example.jy.jieyou.activity.SettingActivity;
 import com.example.jy.jieyou.base.BaseFragment;
 import com.gyf.immersionbar.ImmersionBar;
 import com.gyf.immersionbar.components.SimpleImmersionOwner;
@@ -30,6 +34,23 @@ public class FourTabFragment extends BaseFragment implements SimpleImmersionOwne
 
     @BindView(R.id.imageViewHeader)
     ImageView imageViewHeader;
+
+    @BindView(R.id.lineViewInMoney)
+    LinearLayout lineViewInMoney;
+    @BindView(R.id.lineViewSendMessage)
+    LinearLayout lineViewSendMessage;
+    @BindView(R.id.lineViewSign)
+    LinearLayout lineViewSign;
+    @BindView(R.id.lineViewAddressBook)
+    LinearLayout lineViewAddressBook;
+    @BindView(R.id.lineViewSharDiscount)
+    LinearLayout lineViewSharDiscount;
+    @BindView(R.id.lineViewAboutApp)
+    LinearLayout lineViewAboutApp;
+    @BindView(R.id.lineViewHelp)
+    LinearLayout lineViewHelp;
+    @BindView(R.id.lineViewSetting)
+    LinearLayout lineViewSetting;
 
     @Nullable
     @Override
@@ -53,7 +74,27 @@ public class FourTabFragment extends BaseFragment implements SimpleImmersionOwne
         imageViewHeader.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+            }
+        });
 
+        lineViewHelp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                HelpActivity.getInstance(getActivity());
+            }
+        });
+
+        lineViewSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SettingActivity.getInstance(getActivity());
+            }
+        });
+
+        lineViewInMoney.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                InvestMoney.getInstance(getActivity());
             }
         });
     }
