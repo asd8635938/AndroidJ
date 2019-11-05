@@ -69,9 +69,12 @@ public class PhonePeopleActivity extends BaseActivity {
     CheckBox mCheckBox1;
     @BindView(R.id.mCheckBox2)
     CheckBox mCheckBox2;
+    @BindView(R.id.textViewNumb)
+    TextView textViewNumb;
 
     private SortAdapter adapter;
     private List<SortModel> mResult = new ArrayList<>();
+    private int mNumb = 0;
 
     /**
      * 汉字转换成拼音的类
@@ -103,6 +106,12 @@ public class PhonePeopleActivity extends BaseActivity {
         titleCenterName.setText("通讯录");
 
         mSortModel = (List<SortModel>) getIntent().getExtras().getSerializable(mDATA);
+        for (int i = 0; i < mSortModel.size(); i++) {
+            if (mSortModel.get(i).isClick()) {
+               mNumb = mNumb + 1;
+            }
+        }
+        addNubm(mNumb);
 
         initView();
 
@@ -183,6 +192,8 @@ public class PhonePeopleActivity extends BaseActivity {
                                 SourceDateList.get(i).setClick(false);
                             }
                             mResult.clear();
+                            mNumb = 0;
+                            addNubm(mNumb);
                             adapter.notifyDataSetChanged();
                         }
                     } else {
@@ -194,6 +205,8 @@ public class PhonePeopleActivity extends BaseActivity {
                             }
                             mResult.clear();
                             mResult.addAll(SourceDateList);
+                            mNumb = mResult.size();
+                            addNubm(mNumb);
                             adapter.notifyDataSetChanged();
                         }
                     }
@@ -203,6 +216,8 @@ public class PhonePeopleActivity extends BaseActivity {
             linearCheck2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    mNumb = 0;
+                    addNubm(mNumb);
                     if (mCheckBox2.isChecked()) {
                         mCheckBox2.setChecked(false);
                     } else {
@@ -231,6 +246,14 @@ public class PhonePeopleActivity extends BaseActivity {
 
         } catch (Exception e) {
         }
+    }
+
+    private void addNubm(int numb) {
+        if (numb <= 0) {
+            textViewNumb.setText("已选中0人");
+            return;
+        }
+        textViewNumb.setText("已选中" + numb + "人");
     }
 
     private void initAdd() {
@@ -318,10 +341,14 @@ public class PhonePeopleActivity extends BaseActivity {
                     if (mContent.isClick()) {
                         viewHolder.mCheckBox.setChecked(false);
                         mContent.setClick(false);
+                        mNumb = mNumb - 1;
+                        addNubm(mNumb);
                         initAdd();
                     } else {
                         viewHolder.mCheckBox.setChecked(true);
                         mContent.setClick(true);
+                        mNumb = mNumb + 1;
+                        addNubm(mNumb);
                         initAdd();
                     }
                 }
@@ -374,6 +401,7 @@ public class PhonePeopleActivity extends BaseActivity {
 
     /**
      * 为ListView填充数据
+     *
      * @param date
      * @return
      */
