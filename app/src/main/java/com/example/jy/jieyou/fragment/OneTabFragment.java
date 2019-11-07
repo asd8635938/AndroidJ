@@ -15,6 +15,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -87,7 +88,7 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
     @BindView(R.id.editextFilePeople)
     EditText editextFilePeople;
     @BindView(R.id.textViewPost)
-    TextView textViewPost;
+    Button textViewPost;
     @BindView(R.id.mCheckBox)
     CheckBox mCheckBox;
     @BindView(R.id.editTextFileContent)
@@ -109,7 +110,7 @@ public class OneTabFragment extends BaseFragment implements SimpleImmersionOwner
     @BindView(R.id.textViewSignName)
     TextView textViewSignName;
     @BindView(R.id.textViewFragment2)
-    TextView textViewFragment2;
+    Button textViewFragment2;
 
     private String mTime = ""; // 定时时间
     private int mStringLength = 0; // 收件人联系电话长度
