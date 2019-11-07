@@ -60,7 +60,7 @@
                         android:textSize="@dimen/sp12" />
                 </LinearLayout>
 
-                <TextView
+                <Button
                     android:layout_width="65dp"
                     android:layout_height="45dp"
                     android:layout_alignParentRight="true"

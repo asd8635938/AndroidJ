@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -60,7 +61,7 @@ public class PhonePeopleActivity extends BaseActivity {
     @BindView(R.id.dialog)
     TextView dialog;
     @BindView(R.id.textViewSure)
-    TextView textViewSure;
+    Button textViewSure;
     @BindView(R.id.linearCheck1)
     LinearLayout linearCheck1;
     @BindView(R.id.linearCheck2)
