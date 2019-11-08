@@ -14,7 +14,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.example.jy.jieyou.R;
 import com.example.jy.jieyou.base.BaseActivity;
-import com.example.jy.jieyou.fragment.TwoTabFragment;
 import com.example.jy.jieyou.response.TwoListResponse;
 import com.example.jy.jieyou.utils.SpaceItemDecoration;
 import com.gyf.immersionbar.ImmersionBar;
